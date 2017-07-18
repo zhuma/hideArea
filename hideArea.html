@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>键盘遮挡输入框bug</title>
+    <meta name="viewport"
+          content="width=device-width,user-scalable=no,initial-scale=1.0">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+    <link rel="stylesheet" href="css/normalize.min.css">
+    <style>
+        body,html{
+            width:100%;
+            height:100%;
+        }
+        .container{
+            background:#ccc;
+            width:100%;
+            height:100%;
+            padding-top: 20px;
+            margin-top: -20px;
+            position: absolute;
+            top:0;
+        }
+        .container input{
+            width:80%;
+            height:30px;
+            background: #ffffff;
+            display: block;
+            margin:20px auto 0;
+        }
+    </style>
+</head>
+<body>
+<section class="container">
+    <input type="text">
+    <input type="text">
+    <input type="text">
+    <input type="text">
+    <input type="text">
+    <input type="text">
+    <input type="text">
+    <input type="text">
+    <input type="text">
+    <input type="text">
+    <input type="text">
+</section>
+<script src="jquery/jquery-2.1.4.min.js"></script>
+<script>
+    $(function () {
+        $(".container").css({
+            width:$(window).width() + "px",
+            height:$(window).height() + "px"
+        });
+        resizeSoftKeyHeight({"name":".container","timer":500});
+    });
+    function resizeSoftKeyHeight(obj) {
+        var sHeight = $(window).height();
+        $(document).on("focusIn",function () {
+            var curTop = $(this).offset().top;
+            if(curTop > (sHeight/2)){
+                $(obj.name).animate({
+                    top:-(sHeight/10*4) + "px"
+                },obj.time)
+            }
+
+        });
+        $(document).on("focusout",function (e) {
+            $(obj.name).animate({
+                top:0
+            },obj.time)
+
+        });
+        //android
+        $(window).on('resize', function () {
+            var nowClientHeight = document.documentElement.clientHeight || document.body.clientHeight;
+            if (sHeight > nowClientHeight) {
+                //键盘弹出的事件处理
+            }
+            else {
+                $(obj.name).animate({
+                    top:0
+                },obj.time)
+            }
+        });
+    }
+</script>
+</body>
+</html>
